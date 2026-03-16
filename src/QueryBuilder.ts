@@ -119,7 +119,12 @@ const applyAndConditions = (query: CollectionReference | CollectionGroup | Query
   let resultQuery = query;
   for (let i = 0; i < conditions.length; i++) {
     const condition = conditions[i];
-    if (isCondition(condition)) {
+    const looksLikeCondition =
+      typeof condition === 'object' &&
+      condition !== null &&
+      ('column' in condition || 'operator' in condition || 'value' in condition);
+
+    if (looksLikeCondition || isCondition(condition)) {
       const cond: Condition = condition as Condition;
 
       logger.default('Applying condition', {
